@@ -12,7 +12,6 @@ namespace MTUCI_CS_PC_Security
         public MainWindow()
         {
             InitializeComponent();
-            TextBoxConnection.Text = Service.ConnectionStatus();
         }
 
     }
