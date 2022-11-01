@@ -6,21 +6,38 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace MTUCI_CS_PC_Security
 {
-    internal class Service
+    internal static class Service
     {
-        public static string ConnectionStatus()
+        public static bool IsInternetWorking()
         {
-            string status="Активно";
             var ipStatus=IPStatus.Unknown;
             try
             {
                 ipStatus = new Ping().Send("8.8.8.8").Status;
             }
-            catch(PingException e)
-            {
-                status = "Не активно";
-            }
-            return status;
+            catch{}
+
+            return ipStatus==IPStatus.Success;
+        }
+
+        public static bool IsFirewallInstalled()
+        {
+            return false;
+        }
+
+        public static bool IsFireWallWorking()
+        {
+            return false;
+        }
+
+        public static bool IsAntivirusInstalled()
+        {
+            return false;
+        }
+
+        public static bool IsAntivirusWorking()
+        {
+            return false;
         }
     }
 

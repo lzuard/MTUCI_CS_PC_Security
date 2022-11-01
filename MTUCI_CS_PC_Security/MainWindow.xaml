@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         xmlns:local="clr-namespace:MTUCI_CS_PC_Security"
         Title="Проверка безопасности компьютера" Height="172" Width="600"
-        ResizeMode="NoResize" Topmost="True">
+        ResizeMode="NoResize" Topmost="True"
+        DataContext="MainWindow.xaml.cs">
     <Grid Margin="0,0,0,2">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -13,26 +14,26 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0">
-            <Label x:Name="FireWallTitle" Style="{StaticResource TopLeftLabel}" Content="Брандмауэр"/>
-            <Label x:Name="FireWallInstall" Style="{StaticResource MainLabelStyle}" Content="Не установлен"/>
-            <Label x:Name="FireWallStatus" Style="{StaticResource BottomLeftLabel}" Content="Статус"/>
+            <Label x:Name="FireWallTitle" Style="{StaticResource LabelStyle}" Content="Брандмауэр"/>
+            <Label x:Name="FireWallInstall" Style="{StaticResource LabelStyle}"/>
+            <Label x:Name="FireWallStatus" Style="{StaticResource LabelStyle}"/>
         </StackPanel>
         <StackPanel Grid.Column="1">
-            <Label x:Name="InternetTitle" Style="{StaticResource MainLabelStyle}" Content="Интернет-Соединение"/>
-            <Label x:Name="InternetStatus" Style="{StaticResource MainLabelStyle}" Content="Статус"/>
+            <Label x:Name="InternetTitle" Style="{StaticResource LabelStyle}" Content="Интернет-Соединение"/>
+            <Label x:Name="InternetStatus" Style="{StaticResource LabelStyle}"/>
             <Grid Height="40" Margin="0,2,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" Content="Сохранить" Width="114" HorizontalAlignment="Center"/>
-                <Button Grid.Column="1" Content="Обновить" Width="114" HorizontalAlignment="Center"/>
+                <Button Grid.Column="1" Content="Обновить" Width="114" HorizontalAlignment="Center" Click="Button_Click"/>
             </Grid>
         </StackPanel>
         <StackPanel Grid.Column="2">
-            <Label x:Name="AntivirusTitle" Style="{StaticResource TopRightLabel}" Content="Антивирус"/>
-            <Label x:Name="AntivirusInstall" Style="{StaticResource MainLabelStyle}" Content="Установлен"/>
-            <Label x:Name="AntivirusStatus" Style="{StaticResource BottomRightLabel}" Content="Статус"/>
+            <Label x:Name="AntivirusTitle" Style="{StaticResource LabelStyle}" Content="Антивирус"/>
+            <Label x:Name="AntivirusInstall" Style="{StaticResource LabelStyle}"/>
+            <Label x:Name="AntivirusStatus" Style="{StaticResource LabelStyle}"/>
         </StackPanel>
     </Grid>
 </Window>
