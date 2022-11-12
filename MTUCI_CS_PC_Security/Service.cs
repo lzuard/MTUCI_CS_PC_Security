@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net.NetworkInformation;
-using System.Runtime.InteropServices.ComTypes;
-using System.Security.Cryptography.X509Certificates;
+using System.Management;
+using Microsoft.Win32;
+using System.Runtime.InteropServices;
+
 
 
 namespace MTUCI_CS_PC_Security
@@ -30,9 +34,33 @@ namespace MTUCI_CS_PC_Security
             return false;
         }
 
+        private static bool IsAntivirusStatusActive(int decStatus)
+        {
+            var hexStatus = decStatus.ToString("X").Substring(1, 2);
+            return hexStatus is "10" or "11";
+        }
+
         public static bool IsAntivirusInstalled()
         {
-            return false;
+            var antivirusList=new Dictionary<string,bool>();
+            var scope = new ManagementScope(@"root\SecurityCenter2");
+            var query = new ObjectQuery("Select * From " + "AntivirusProduct");
+            var searcher = new ManagementObjectSearcher(scope,query);
+            try
+            {
+                foreach (var list in searcher.Get())
+                {
+                    var name = list["displayName"].ToString().Trim();
+                    var status = Convert.ToInt32(list["productState"]);
+                    antivirusList.Add(name,IsAntivirusStatusActive(status));
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return antivirusList.Count > 0;
         }
 
         public static bool IsAntivirusWorking()
