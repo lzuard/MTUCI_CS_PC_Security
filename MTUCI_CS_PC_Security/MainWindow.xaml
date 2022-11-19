@@ -4,36 +4,42 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         xmlns:local="clr-namespace:MTUCI_CS_PC_Security"
-        Title="Проверка безопасности компьютера" Height="172" Width="600"
+        Title="Проверка безопасности компьютера" Height="200" Width="600"
         ResizeMode="NoResize" Topmost="True"
         DataContext="MainWindow.xaml.cs">
-    <Grid Margin="0,0,0,2">
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="1.3*"/>
-            <ColumnDefinition/>
+            <ColumnDefinition />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0">
-            <Label x:Name="FireWallTitle" Style="{StaticResource LabelStyle}" Content="Брандмауэр"/>
-            <Label x:Name="FireWallInstall" Style="{StaticResource LabelStyle}"/>
-            <Label x:Name="FireWallStatus" Style="{StaticResource LabelStyle}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Grid.Column="0" 
+                    Orientation="Vertical">
+            <Label Content="Список антивирусов" HorizontalContentAlignment="Center"/>
+            <ListBox x:Name="AntivirusListBox" 
+                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </StackPanel>
-        <StackPanel Grid.Column="1">
-            <Label x:Name="InternetTitle" Style="{StaticResource LabelStyle}" Content="Интернет-Соединение"/>
-            <Label x:Name="InternetStatus" Style="{StaticResource LabelStyle}"/>
-            <Grid Height="40" Margin="0,2,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Сохранить" Width="114" HorizontalAlignment="Center"/>
-                <Button Grid.Column="1" Content="Обновить" Width="114" HorizontalAlignment="Center" Click="Button_Click"/>
-            </Grid>
+        <StackPanel Grid.Row="0" Grid.Column="1" 
+                    Orientation="Vertical">
+            <Label Content="Список межсетвых экранов" HorizontalContentAlignment="Center"/>
+            <ListBox x:Name="FirewallListBox" 
+                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></ListBox>
         </StackPanel>
-        <StackPanel Grid.Column="2">
-            <Label x:Name="AntivirusTitle" Style="{StaticResource LabelStyle}" Content="Антивирус"/>
-            <Label x:Name="AntivirusInstall" Style="{StaticResource LabelStyle}"/>
-            <Label x:Name="AntivirusStatus" Style="{StaticResource LabelStyle}"/>
+        <StackPanel Grid.Row="1" Grid.Column="0"
+                    Orientation="Horizontal">
+            <Label Content="Статус интернет-соединения:"/>
+            <Label Content="Неизвестно" x:Name="InternetStatusLabel"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" 
+                    Orientation="Horizontal" HorizontalAlignment="Right">
+
+            <Button Content="Сохранить" Margin="0,0,10,0" Click="Save_Button_Click"/>
+            <Button Content="Обновить" Click="Update_Button_Click"/>
         </StackPanel>
     </Grid>
 </Window>

@@ -1,5 +1,6 @@
 ﻿
 
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -12,15 +13,18 @@ namespace MTUCI_CS_PC_Security
     public partial class MainWindow : Window
     {
         private static Brush _greenBrush;
-        public static Brush _redBrush;
+        private static Brush _redBrush;
+
+        private Service service;
+
+
 
 
         public MainWindow()
         {
             InitializeComponent();
 
-            _greenBrush = new SolidColorBrush(Color.FromRgb(141, 199, 105));
-            _redBrush = new SolidColorBrush(Color.FromRgb(235, 108, 108));
+            service=new Service();
 
             Update();
         }
@@ -28,81 +32,56 @@ namespace MTUCI_CS_PC_Security
 
         private void Update()
         {
-            InternetStatusUpdate();
-            FireWallStatusUpdate();
-            AntivirusCheck();
+            UpdateInternetStatus();
+            UpdateAntivirusList();
+            UpdateFirewallList();
         }
 
-        private void InternetStatusUpdate ()
+        private void UpdateInternetStatus()
         {
-            if (Service.IsInternetWorking())
-            {
-                InternetTitle.Background = _greenBrush;
-                SetLabelParams(InternetStatus, _greenBrush, "Активно");
-            }
+            if (service.InternetIsActive)
+                InternetStatusLabel.Content = "Активно";
             else
+                InternetStatusLabel.Content = "Не активно";
+        }
+
+        private void UpdateAntivirusList()
+        {
+            AntivirusListBox.Items.Clear();
+            Dictionary<string, bool> antivirusList = service.AntivirusList;
+            string status;
+            bool tempStatus;
+            foreach (var key in antivirusList.Keys)
             {
-                InternetTitle.Background = _redBrush;
-                SetLabelParams(InternetStatus, _greenBrush, "Не активно");
+                antivirusList.TryGetValue(key, out tempStatus);
+                status = tempStatus ? "Активен" : "Не активен";
+                AntivirusListBox.Items.Add(key + "\t"+status);
             }
         }
 
-        private void FireWallStatusUpdate()
+        private void UpdateFirewallList()
         {
-            if (Service.IsFirewallInstalled())
+            FirewallListBox.Items.Clear();
+            Dictionary<string, bool> firewallList = service.FireWallList;
+            string status;
+            bool tempStatus;
+            foreach (var key in firewallList.Keys)
             {
-                SetLabelParams(FireWallInstall,_greenBrush,"Установлен");
-                if (Service.IsFireWallWorking())
-                {
-                    SetLabelParams(FireWallStatus, _greenBrush, "Активен");
-                    FireWallTitle.Background = _greenBrush;
-                }
-                else
-                {
-                    SetLabelParams(FireWallStatus, _redBrush, "Не активен");
-                    FireWallTitle.Background = _redBrush;
-                }
-            }
-            else
-            {
-                SetLabelParams(FireWallInstall, _redBrush, "Не установлен");
-                SetLabelParams(FireWallStatus, _redBrush, "Не активен");
-                FireWallTitle.Background = _redBrush;
+                firewallList.TryGetValue(key, out tempStatus);
+                status = tempStatus ? "Активен" : "Не активен";
+                FirewallListBox.Items.Add(key + "\t" + status);
             }
         }
 
-        private void SetLabelParams(Label label,Brush color, string content)
-        {
-            label.Background = color;
-            label.Content = content;
-        }
-        private void AntivirusCheck()
-        {
-            if (Service.IsAntivirusInstalled())
-            {
-                SetLabelParams(AntivirusInstall,_greenBrush,"Установлен");
-                if (Service.IsFireWallWorking())
-                {
-                    SetLabelParams(AntivirusStatus, _greenBrush, "Активен");
-                    AntivirusTitle.Background = _greenBrush;
-                }
-                else
-                {
-                    SetLabelParams(AntivirusStatus, _redBrush, "Не активен");
-                    AntivirusTitle.Background = _redBrush;
-                }
-            }
-            else
-            {
-                SetLabelParams(AntivirusInstall, _redBrush, "Не установлен");
-                SetLabelParams(AntivirusStatus, _redBrush, "Не активен");
-                AntivirusTitle.Background = _redBrush;
-            }
-        }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Update_Button_Click(object sender, RoutedEventArgs e)
         {
             Update();
+        }
+
+        private void Save_Button_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Not ready yet");
         }
     }
 }
