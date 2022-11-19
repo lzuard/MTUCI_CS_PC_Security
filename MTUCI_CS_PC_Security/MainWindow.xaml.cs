@@ -1,11 +1,7 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
 using Microsoft.Win32;
 
 namespace MTUCI_CS_PC_Security
@@ -16,24 +12,26 @@ namespace MTUCI_CS_PC_Security
     public partial class MainWindow : Window
     {
 
-        private Service service;
-        private bool InternetIsActive;
-        private Dictionary<string, bool> AntivirusList;
-        private Dictionary<string, bool> FirewallList;
+        private readonly Service _service;                        //WMI interactions class       
+        private bool _internetIsActive;                  //Internet status
+        private Dictionary<string, bool> _antivirusList; //List of antivirus
+        private Dictionary<string, bool> _firewallList;  //List of firewalls
 
 
-
-
+        /// <summary>
+        /// Window constructor 
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
-
-            service=new Service();
-
+            _service=new Service();
             Update();
         }
 
 
+        /// <summary>
+        /// Starts up all update functions
+        /// </summary>
         private void Update()
         {
             UpdateInternetStatus();
@@ -41,52 +39,64 @@ namespace MTUCI_CS_PC_Security
             UpdateFirewallList();
         }
 
+        /// <summary>
+        /// Updates internet status and sends result to UI
+        /// </summary>
         private void UpdateInternetStatus()
         {
-            InternetIsActive = service.InternetIsActive;
-            if (InternetIsActive)
+            _internetIsActive = _service.InternetIsActive;
+            if (_internetIsActive)
                 InternetStatusLabel.Content = "Активно";
             else
                 InternetStatusLabel.Content = "Не активно";
         }
 
+        /// <summary>
+        /// Updates antivirus list and sends result to UI
+        /// </summary>
         private void UpdateAntivirusList()
         {
             AntivirusListBox.Items.Clear();
-            AntivirusList = service.AntivirusList;
-            string status;
-            bool tempStatus;
-            foreach (var key in AntivirusList.Keys)
+            _antivirusList = _service.AntivirusList;
+            foreach (var key in _antivirusList.Keys)
             {
-                AntivirusList.TryGetValue(key, out tempStatus);
+                _antivirusList.TryGetValue(key, out var tempStatus);
                 AntivirusListBox.Items.Add(key + "\t" + (tempStatus ? "Активен" : "Не активен"));
             }
         }
 
+        /// <summary>
+        /// Updates firewall list and sends result to UI
+        /// </summary>
         private void UpdateFirewallList()
         {
             FirewallListBox.Items.Clear();
-            FirewallList = service.FireWallList;
-            string status;
-            bool tempStatus;
-            foreach (var key in FirewallList.Keys)
+            _firewallList = _service.FireWallList;
+            foreach (var key in _firewallList.Keys)
             {
-                FirewallList.TryGetValue(key, out tempStatus);
+                _firewallList.TryGetValue(key, out var tempStatus);
                 FirewallListBox.Items.Add(key + "\t" + (tempStatus ? "Активен" : "Не активен"));
             }
         }
 
-
+        /// <summary>
+        /// Button update handler
+        /// </summary>
         private void Update_Button_Click(object sender, RoutedEventArgs e)
         {
             Update();
         }
 
+        /// <summary>
+        /// Button save handler
+        /// </summary>
         private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
 
-            var dialog = new OpenFileDialog();
-            dialog.Filter = "Текстовые файлы (*.txt)|*.txt";
+            var dialog = new OpenFileDialog
+            {
+                Filter = "Текстовые файлы (*.txt)|*.txt"
+            };
             try
             {
                 if (dialog.ShowDialog() == true)
@@ -96,19 +106,20 @@ namespace MTUCI_CS_PC_Security
                     var text = "\nПроверка безопасности "
                                + date
                                + "\nСтатус интернет-соединения "
-                               + (InternetIsActive ? "Активно" : "Не активно")
+                               + (_internetIsActive ? "Активно" : "Не активно")
                                + "\n\n Список анивирусов:\n";
+
                     bool tempStatus;
-                    foreach (var key in AntivirusList.Keys)
+                    foreach (var key in _antivirusList.Keys)
                     {
-                        AntivirusList.TryGetValue(key, out tempStatus);
+                        _antivirusList.TryGetValue(key, out tempStatus);
                         text += key + "\t" + (tempStatus ? "Активен" : "Не активен") + "\n";
                     }
 
                     text += "\n Список межсетевых экранов:\n";
-                    foreach (var key in FirewallList.Keys)
+                    foreach (var key in _firewallList.Keys)
                     {
-                        FirewallList.TryGetValue(key, out tempStatus);
+                        _firewallList.TryGetValue(key, out tempStatus);
                         text += key + "\t" + (tempStatus ? "Активен" : "Не активен") + "\n";
                     }
 
@@ -116,7 +127,7 @@ namespace MTUCI_CS_PC_Security
                     file.Write(text);
                 }
             }
-            catch (Exception exception)
+            catch
             {
                 MessageBox.Show("Не удалось сохранить данные в файл");
             }
